@@ -1,0 +1,3 @@
+include toast/config/deployment.ini_tmpl
+recursive-include toast/public *
+recursive-include toast/templates *
