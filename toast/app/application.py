@@ -1,9 +1,15 @@
+import pickle
+
 class Process:
     def start(self):
         import multiprocessing
         (self._pipe_out, self._pipe_in) = multiprocessing.Pipe(False)
-        p = multiprocessing.Process(target=self.run)
+        p = multiprocessing.Process(target=self._run)
         p.start()
+
+    def init(self):
+        """Override if the process needs initialization."""
+        pass
 
     def send(self, command):
         self._pipe_in.send(command)
@@ -11,30 +17,32 @@ class Process:
     def receive(self):
         return self._pipe_out.recv()
 
-    def run(self):
+    def _run(self):
         self.init()
         while True:
             self.loop()
 
-    def init(self):
-        """Override if the process needs initialization."""
-        pass
-
 class Application(Process):
     def init(self):
-        self.replay()
+        self._replay()
 
     def loop(self):
         command = self.receive()
-        print("In app: %s" % command)
-        self.persist(command)
-        self.execute(command)
+        self._persist(command)
+        self._execute(command)
 
-    def replay(self):
-        pass
+    def _replay(self):
+        with open('log/command.log', 'r') as f:
+            try:
+                while True:
+                    command = pickle.load(f)
+                    self._execute(command)
+            except EOFError:
+                pass
 
-    def persist(self, command):
-        pass
+    def _persist(self, command):
+        with open('log/command.log', 'a') as f:
+            pickle.dump(command, f)
 
-    def execute(self, command):
-        pass
+    def _execute(self, command):
+        print("executing %s" % command)
