@@ -11,8 +11,8 @@ class Process:
         """Override if the process needs initialization."""
         pass
 
-    def send(self, command):
-        self._pipe_in.send(command)
+    def send(self, message):
+        self._pipe_in.send(message)
 
     def receive(self):
         return self._pipe_out.recv()
@@ -24,7 +24,8 @@ class Process:
 
 class Application(Process):
     def init(self):
-        self._library = Library()
+        broker = Broker()
+        self._library = Library(broker)
         self._replay()
 
     def loop(self):
@@ -50,11 +51,38 @@ class Application(Process):
         command.execute(self._library)
 
 class Library:
-    def __init__(self):
+    def __init__(self, broker):
+        self._broker = broker
         self._books = []
+        self._authors = []
+
     def add(self, book):
         self._books.append(book)
+        if not book.author in self._authors:
+            self.add_author(book.author)
+        self._broker.send(BookAddedEvent(book.name, book.author))
+
+    def add_author(self, author):
+        self._authors.append(author)
+        self._broker.send(AuthorAddedEvent(author))
 
 class Book:
     def __init__(self, name, author):
+        self.name = name
+        self.author = author
+
+class BookAddedEvent:
+    def __init__(self, name, author):
         pass
+
+class AuthorAddedEvent:
+    def __init__(self, name):
+        pass
+
+class Broker:
+    def __init__(self):
+        self._listeners = []
+    def send(self, event):
+        [l.send(event) for l in self._listeners]
+    def add_listener(self, l):
+        self._listeners.append(l)
