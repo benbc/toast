@@ -24,6 +24,7 @@ class Process:
 
 class Application(Process):
     def init(self):
+        self._library = Library()
         self._replay()
 
     def loop(self):
@@ -46,3 +47,14 @@ class Application(Process):
 
     def _execute(self, command):
         print("executing %s" % command)
+        command.execute(self._library)
+
+class Library:
+    def __init__(self):
+        self._books = []
+    def add(self, book):
+        self._books.append(book)
+
+class Book:
+    def __init__(self, name, author):
+        pass
