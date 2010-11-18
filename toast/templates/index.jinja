@@ -5,5 +5,17 @@
       <input type="text" name="author"/>
       <input type="submit" value="Submit"/>
     </form>
+    <h3>Books</h3>
+    <ul>
+      {% for (name, author) in c.books %}
+        <li>{{ name }} by {{ author }}</li>
+      {% endfor %}
+    </ul>
+    <h3>Authors</h3>
+    <ul>
+      {% for author in c.authors %}
+        <li>{{ author }}</li>
+      {% endfor %}
+    </ul>
   </body>
 </html

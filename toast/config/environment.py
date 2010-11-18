@@ -7,7 +7,7 @@ from pylons.configuration import PylonsConfig
 import toast.lib.app_globals as app_globals
 import toast.lib.helpers
 from toast.config.routing import make_map
-from toast.app.application import Application
+from toast.app.application import build_application
 
 def load_environment(global_conf, app_conf):
     """Configure the Pylons environment via the ``pylons.config``
@@ -41,8 +41,6 @@ def load_environment(global_conf, app_conf):
     # CONFIGURATION OPTIONS HERE (note: all config options will override
     # any Pylons config options)
 
-    application = Application()
-    config['toast.application'] = application
-    application.start()
+    config['toast.application'], config['toast.database'] = build_application()
 
     return config
