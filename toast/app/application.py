@@ -68,23 +68,33 @@ class Library:
     def __init__(self, broker):
         self._broker = broker
         self._books = []
-        self._authors = []
+        self._authors = AuthorList(broker)
 
     def add(self, book):
         self._books.append(book)
-        if not book.author in self._authors:
-            self.add_author(book.author)
-        self._broker.send(BookAddedEvent(book.id, book.name, book.author))
+        book.add_author_to(self._authors)
+        self._broker.send(book.write_to(BookAddedEvent))
 
-    def add_author(self, author):
+class AuthorList:
+    def __init__(self, broker):
+        self._authors = []
+        self._broker = broker
+    def __contains__(self, author):
+        return author in self._authors
+    def append(self, author):
         self._authors.append(author)
         self._broker.send(AuthorAddedEvent(author))
 
 class Book:
     def __init__(self, ids, name, author):
-        self.id = ids.next()
-        self.name = name
-        self.author = author
+        self._id = ids.next()
+        self._name = name
+        self._author = author
+    def write_to(self, target):
+        return target(self._id, self._name, self._author)
+    def add_author_to(self, authors):
+        if not self._author in authors:
+            authors.append(self._author)
 
 class BookAddedEvent:
     def __init__(self, id, name, author):
