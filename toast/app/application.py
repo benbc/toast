@@ -79,11 +79,10 @@ class AuthorList:
     def __init__(self, broker):
         self._authors = []
         self._broker = broker
-    def __contains__(self, author):
-        return author in self._authors
-    def append(self, author):
-        self._authors.append(author)
-        self._broker.send(AuthorAddedEvent(author))
+    def add(self, author):
+        if not author in self._authors:
+            self._authors.append(author)
+            self._broker.send(AuthorAddedEvent(author))
 
 class Book:
     def __init__(self, ids, name, author):
@@ -93,8 +92,7 @@ class Book:
     def write_to(self, target):
         return target(self._id, self._name, self._author)
     def add_author_to(self, authors):
-        if not self._author in authors:
-            authors.append(self._author)
+        authors.add(self._author)
 
 class BookAddedEvent:
     def __init__(self, id, name, author):
