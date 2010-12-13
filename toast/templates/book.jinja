@@ -1,0 +1,10 @@
+<html>
+  <body>
+    <h3>{{ c.book['name'] }} by {{ c.book['author'] }}</h3>
+    <ul>
+      {% for recipe in c.book['recipes'] %}
+        <li>{{ recipe }}</li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>

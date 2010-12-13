@@ -26,6 +26,7 @@ class Application(Process):
     def __init__(self):
         self._broker = Broker()
         self._library = Library(self._broker)
+        self._ids = Ids()
 
     def initialize(self):
         self._replay()
@@ -53,7 +54,15 @@ class Application(Process):
 
     def _execute(self, command):
         print("application executing: %s" % command)
-        command.execute(self._library)
+        command.execute(self._library, self._ids)
+
+class Ids:
+    def __init__(self):
+        self._next_id = 0;
+    def next(self):
+        id = self._next_id
+        self._next_id += 1
+        return id
 
 class Library:
     def __init__(self, broker):
@@ -65,23 +74,25 @@ class Library:
         self._books.append(book)
         if not book.author in self._authors:
             self.add_author(book.author)
-        self._broker.send(BookAddedEvent(book.name, book.author))
+        self._broker.send(BookAddedEvent(book.id, book.name, book.author))
 
     def add_author(self, author):
         self._authors.append(author)
         self._broker.send(AuthorAddedEvent(author))
 
 class Book:
-    def __init__(self, name, author):
+    def __init__(self, ids, name, author):
+        self.id = ids.next()
         self.name = name
         self.author = author
 
 class BookAddedEvent:
-    def __init__(self, name, author):
+    def __init__(self, id, name, author):
+        self._id = id
         self._name = name
         self._author = author
     def accept(self, visitor):
-        visitor.handle_book_added(self._name, self._author)
+        visitor.handle_book_added(self._id, self._name, self._author)
     def __str__(self):
         return "BookAddedEvent(%s, %s)" % (self._name, self._author)
 
@@ -115,9 +126,9 @@ class Database(Process):
         print("database handling: %s" % event)
         event.accept(self)
 
-    def handle_book_added(self, name, author):
+    def handle_book_added(self, id, name, author):
         books = self._data['books']
-        books.append((name, author))
+        books.append({'id': id, 'name': name, 'author': author, 'recipes': []})
         self._data['books'] = books
 
     def handle_author_added(self, name):
@@ -127,6 +138,8 @@ class Database(Process):
 
     def books(self):
         return self._data['books']
+    def book(self, id):
+        return [b for b in self.books() if b['id']==id][0]
     def authors(self):
         return self._data['authors']
 

@@ -14,3 +14,8 @@ class ViewController(BaseController):
         c.books = database.books()
         c.authors = database.authors()
         return render('/index.jinja')
+
+    def book(self, id):
+        database = config['toast.database']
+        c.book = database.book(int(id))
+        return render('/book.jinja')
