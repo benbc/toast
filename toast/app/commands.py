@@ -1,4 +1,4 @@
-from application import Book
+from model import Book
 
 class AddLineCommand:
     def __init__(self, line):
