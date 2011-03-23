@@ -15,3 +15,10 @@ class CommandController(BaseController):
         log.debug(command)
         config['toast.application'].send(command)
         redirect(url(controller='view'))
+
+    def add_recipe(self):
+        book = int(request.params['book'])
+        command = AddRecipeCommand(book, request.params['title'])
+        log.debug(command)
+        config['toast.application'].send(command)
+        redirect(url(controller='view', action='book', id=book))

@@ -17,6 +17,11 @@ class Library:
         book.add_author_to(self._authors)
         self._broker.send(book.write_to(BookAddedEvent))
 
+    def find_book(self, id):
+        for b in self._books:
+            if b.has_id(id):
+                return b
+
 class AuthorList:
     def __init__(self, broker):
         self._authors = []
@@ -27,14 +32,34 @@ class AuthorList:
             self._broker.send(AuthorAddedEvent(author))
 
 class Book:
-    def __init__(self, ids, name, author):
+    def __init__(self, ids, broker, name, author):
         self._id = ids.next()
+        self._broker = broker
         self._name = name
         self._author = author
+        self._recipes = []
     def write_to(self, target):
         return target(self._id, self._name, self._author)
     def add_author_to(self, authors):
         authors.add(self._author)
+    def add_recipe(self, title):
+        self._broker.send(RecipeAddedEvent(self._id, title))
+        self._recipes.append(Recipe(title))
+    def has_id(self, id):
+        return self._id == id
+
+class Recipe:
+    def __init__(self, title):
+        self._title = title
+
+class RecipeAddedEvent:
+    def __init__(self, book_id, recipe):
+        self._book_id = book_id
+        self._recipe = recipe
+    def accept(self, visitor):
+        visitor.handle_recipe_added(self._book_id, self._recipe)
+    def __str__(self):
+        return "RecipeAddedEvent(%s, %s)" % (self._book_id, self._recipe)
 
 class BookAddedEvent:
     def __init__(self, id, name, author):

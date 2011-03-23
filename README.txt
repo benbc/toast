@@ -1,3 +1,16 @@
+Dev setup
+=========
+
+sudo apt-get install python-setuptools
+sudo easy_install pip
+sudo pip install virtualenv
+sudo pip install virtualenvwrapper
+
+mkvirtualenv toast
+workon toast
+pip install pylons
+
+
 This file is for you to describe the toast application. Typically
 you would include information such as the information below:
 

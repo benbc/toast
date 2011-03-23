@@ -55,7 +55,7 @@ class Application(Process):
 
     def _execute(self, command):
         print("application executing: %s" % command)
-        command.execute(self._library, self._ids)
+        command.execute(self._library, self._ids, self._broker)
 
 class Broker:
     def __init__(self):
@@ -88,6 +88,11 @@ class Database(Process):
         authors = self._data['authors']
         authors.append(name)
         self._data['authors'] = authors
+
+    def handle_recipe_added(self, book_id, name):
+        books = self._data['books']
+        [b['recipes'].append(name) for b in books if b['id']==book_id]
+        self._data['books'] = books
 
     def books(self):
         return self._data['books']
