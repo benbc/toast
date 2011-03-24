@@ -80,9 +80,7 @@ class Database(Process):
         event.accept(self)
 
     def handle_book_added(self, id, name, author):
-        books = self._data['books']
-        books[id] = {'id': id, 'name': name, 'author': author, 'recipes': []}
-        self._data['books'] = books
+        self._modifying_books(lambda books: books.__setitem__(id, {'id': id, 'name': name, 'author': author, 'recipes': []}))
 
     def handle_author_added(self, name):
         authors = self._data['authors']
@@ -90,9 +88,7 @@ class Database(Process):
         self._data['authors'] = authors
 
     def handle_recipe_added(self, book_id, name):
-        books = self._data['books']
-        books[book_id]['recipes'].append(name)
-        self._data['books'] = books
+        self._modifying_books(lambda books: books[book_id]['recipes'].append(name))
 
     def books(self):
         return self._data['books'].values()
@@ -100,6 +96,11 @@ class Database(Process):
         return self._data['books'][id]
     def authors(self):
         return self._data['authors']
+
+    def _modifying_books(self, f):
+        books = self._data['books']
+        f(books)
+        self._data['books'] = books
 
 def build_application():
     database = Database()
