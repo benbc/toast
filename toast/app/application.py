@@ -69,7 +69,7 @@ class Database(Process):
     def __init__(self):
         self._data = multiprocessing.Manager().dict()
         self._data['authors'] = []
-        self._data['books'] = []
+        self._data['books'] = {}
 
     def loop(self):
         event = self.receive()
@@ -81,7 +81,7 @@ class Database(Process):
 
     def handle_book_added(self, id, name, author):
         books = self._data['books']
-        books.append({'id': id, 'name': name, 'author': author, 'recipes': []})
+        books[id] = {'id': id, 'name': name, 'author': author, 'recipes': []}
         self._data['books'] = books
 
     def handle_author_added(self, name):
@@ -91,13 +91,13 @@ class Database(Process):
 
     def handle_recipe_added(self, book_id, name):
         books = self._data['books']
-        [b['recipes'].append(name) for b in books if b['id']==book_id]
+        books[book_id]['recipes'].append(name)
         self._data['books'] = books
 
     def books(self):
-        return self._data['books']
+        return self._data['books'].values()
     def book(self, id):
-        return [b for b in self.books() if b['id']==id][0]
+        return self._data['books'][id]
     def authors(self):
         return self._data['authors']
 
