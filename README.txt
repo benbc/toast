@@ -1,6 +1,10 @@
 Dev setup
 =========
 
+sudo add-apt-repository ppa:chris-lea/zeromq
+sudo apt-get update
+sudo apt-get install libzmq0 libzmq-dev python-dev
+
 sudo apt-get install python-setuptools
 sudo easy_install pip
 sudo pip install virtualenv
