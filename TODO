@@ -1,0 +1,5 @@
+?-*- mode: org; -*-
+
+* make ids derived rather than arbitrary
+** to avoid a problem where changing the model (in a way that causes ids to be assigned differently) invalidates all the ids in other commands
+** I (Ben) think that a better approach is to make the id a hash of type name + unique domain details
