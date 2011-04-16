@@ -6,3 +6,4 @@
 * use a real database for view data
 ** relational, with materialized views?
 ** are there nosql dbs that will handle the updates?
+* sensible logging

@@ -1,0 +1,1 @@
+ps -eaf | grep python | grep -v grep | cut -d' ' -f8 | xargs kill
