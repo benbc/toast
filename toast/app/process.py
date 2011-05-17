@@ -22,18 +22,18 @@ class Process:
 
     def send(self, message):
         context = zmq.Context()
-        connection = context.socket(zmq.PUB)
-        connection.connect('tcp://localhost:%s' % self._message_port)
-        connection.send_pyobj(message)
+        socket = context.socket(zmq.PUB)
+        socket.connect('tcp://localhost:%s' % self._message_port)
+        socket.send_pyobj(message)
 
     def receive(self):
-        return self._connection.recv_pyobj()
+        return self._socket.recv_pyobj()
 
     def _run(self):
         self._context = zmq.Context()
-        self._connection = self._context.socket(zmq.SUB)
-        self._connection.bind('tcp://*:%s' % self._message_port)
-        self._connection.setsockopt(zmq.SUBSCRIBE, '')
+        self._socket = self._context.socket(zmq.SUB)
+        self._socket.bind('tcp://*:%s' % self._message_port)
+        self._socket.setsockopt(zmq.SUBSCRIBE, '')
         self.initialize()
         self._signal_ready()
         while True:
