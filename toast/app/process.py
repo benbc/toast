@@ -31,9 +31,7 @@ class Process:
 
     def _run(self):
         self._context = zmq.Context()
-        self._socket = self._context.socket(zmq.SUB)
-        self._socket.bind('tcp://*:%s' % self._message_port)
-        self._socket.setsockopt(zmq.SUBSCRIBE, '')
+        self._connect()
         self.initialize()
         self._signal_ready()
         while True:
@@ -49,3 +47,8 @@ class Process:
         control_socket = self._context.socket(zmq.PAIR)
         control_socket.connect('tcp://localhost:%s' % self._control_port)
         control_socket.send('ready')
+
+    def _connect(self):
+        self._socket = self._context.socket(zmq.SUB)
+        self._socket.bind('tcp://*:%s' % self._message_port)
+        self._socket.setsockopt(zmq.SUBSCRIBE, '')
