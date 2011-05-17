@@ -3,6 +3,7 @@ from process import Process
 
 class Database(Process):
     def __init__(self):
+        Process.__init__(self, 'database')
         self._data = multiprocessing.Manager().dict()
         self._data['authors'] = []
         self._data['books'] = {}

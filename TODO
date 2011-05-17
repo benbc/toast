@@ -7,3 +7,4 @@
 ** relational, with materialized views?
 ** are there nosql dbs that will handle the updates?
 * sensible logging
+* stores pipes in /var/run

@@ -5,6 +5,7 @@ from process import Process
 
 class Application(Process):
     def __init__(self):
+        Process.__init__(self, 'application')
         self._broker = Broker()
         self._library = Library(self._broker)
         self._ids = Ids()
@@ -49,7 +50,6 @@ def build_application():
     database = Database()
     application = Application()
     application.add_listener(database)
-
     database.start()
     application.start()
 
