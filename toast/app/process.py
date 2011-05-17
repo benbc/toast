@@ -3,11 +3,8 @@ import zmq
 from utils import Ids
 
 class Process:
-    _ids = Ids()
-
     def __init__(self, name):
         self._name = name
-        self._port = 5100 + Process._ids.next()
 
     def start(self):
         p = multiprocessing.Process(target=self._run)
@@ -20,7 +17,7 @@ class Process:
     def send(self, message):
         context = zmq.Context()
         socket = context.socket(zmq.PUSH)
-        socket.connect('tcp://localhost:%s' % self._port)
+        socket.connect(self._address())
         socket.send_pyobj(message)
 
     def receive(self):
@@ -35,4 +32,7 @@ class Process:
     def _connect(self):
         context = zmq.Context()
         self._socket = context.socket(zmq.PULL)
-        self._socket.bind('tcp://*:%s' % self._port)
+        self._socket.bind(self._address())
+
+    def _address(self):
+        return 'ipc:///tmp/toast-%s' % self._name
