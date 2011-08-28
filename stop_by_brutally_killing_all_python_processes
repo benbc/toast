@@ -1,1 +1,4 @@
-ps -eaf | grep python | grep -v grep | cut -d' ' -f8 | xargs kill
+#!/usr/bin/env sh
+set -eu
+
+ps -eaf | grep python | grep -v grep | grep -v system-service-d | cut -d' ' -f8 | xargs kill
