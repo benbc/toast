@@ -1,0 +1,20 @@
+#!/bin/env sh
+set -e
+
+sudo add-apt-repository ppa:chris-lea/zeromq
+sudo apt-get update
+sudo apt-get install libzmq0 libzmq-dev python-dev
+
+sudo apt-get install python-setuptools
+sudo easy_install pip
+sudo pip install virtualenv
+sudo pip install virtualenvwrapper
+
+mkdir ~/.virtualenvs
+mkvirtualenv toast
+workon toast
+
+mkdir log
+touch log/command.log
+
+pip install --requirement=requirements.txt
