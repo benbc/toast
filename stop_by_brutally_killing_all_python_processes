@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 set -eu
 
-ps -eaf | grep python | grep -v grep | grep -v system-service-d | cut -d' ' -f8 | xargs kill
+ps -eaf | grep python | grep -v grep | grep -v root | awk '{print $2}' | xargs kill
