@@ -1,16 +1,22 @@
-#!/usr/bin/env sh
-set -e
+# Known to work with Ubuntu 10.10
+# Must be sourced.
 
 sudo add-apt-repository ppa:chris-lea/zeromq
+sudo add-apt-repository ppa:chris-lea/libpgm
 sudo apt-get update
-sudo apt-get install libzmq0 libzmq-dev python-dev
+sudo apt-get install libzmq1 libzmq-dev python-dev
 
 sudo apt-get install python-setuptools
 sudo easy_install pip
 sudo pip install virtualenv
 sudo pip install virtualenvwrapper
 
-mkdir ~/.virtualenvs
+echo "" >> ~/.profile
+echo "export WORKON_HOME=$HOME/.virtualenvs" >> ~/.profile
+echo ". /usr/local/bin/virtualenvwrapper.sh" >> ~/.profile
+. ~/.profile
+
+mkdir -p ~/.virtualenvs
 mkvirtualenv toast
 workon toast
 
