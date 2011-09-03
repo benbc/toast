@@ -1,7 +1,8 @@
 $share = '/tmp/vagrant-share'
+$downloads = "$share/downloads"
 
 define wget($source) {
-  $destination = "$share/$name"
+  $destination = "$downloads/$name"
   exec { "/usr/bin/wget --output-document=$destination $source/$name":
     creates => $destination,
   }
@@ -43,7 +44,7 @@ package {'unzip':
 package { 'go-server':
   ensure => installed,
   provider => dpkg,
-  source => "/tmp/vagrant-share/$go_package",
+  source => "$downloads/$go_package",
   require => [Wget[$go_package], Package['sun-java6-jdk'], Package['unzip']],
 }
 

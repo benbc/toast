@@ -2,4 +2,4 @@
 log/
 build
 .vagrant
-infra/share
+infra/share/downloads
