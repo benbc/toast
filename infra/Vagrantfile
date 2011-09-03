@@ -8,4 +8,5 @@ Vagrant::Config.run do |config|
   config.vm.provision :puppet do |puppet|
     puppet.manifest_file = "go.pp"
   end
+  config.vm.network("33.33.33.2")
 end
