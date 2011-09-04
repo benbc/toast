@@ -54,7 +54,7 @@ package {'sun-java6-jdk':
   require => Repo['lucid-partner'],
 }
 
-service { 'go-server':
+service {'go-server':
   enable => true,
   ensure => running,
   hasstatus => true,
@@ -62,4 +62,8 @@ service { 'go-server':
   require => Package['go-server'],
 }
 
-repo { 'lucid-partner': }
+repo {'lucid-partner': }
+
+package {'git-core':
+  ensure => installed,
+}
