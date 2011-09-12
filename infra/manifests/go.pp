@@ -48,16 +48,29 @@ package {'unzip':
   ensure => installed,
 }
 
-$go_package = 'go-server-2.3.0-14056.deb'
-wget {$go_package:
+$go_server_package = 'go-server-2.3.0-14056.deb'
+wget {$go_server_package:
+  source => 'http://download01.thoughtworks.com/go/2.3/ga',
+}
+
+$go_agent_package = 'go-agent-2.3.0-14056.deb'
+wget {$go_agent_package:
   source => 'http://download01.thoughtworks.com/go/2.3/ga',
 }
 
 package {'go-server':
   ensure => installed,
   provider => dpkg,
-  source => "$downloads/$go_package",
-  require => [Wget[$go_package], Package['sun-java6-jdk'], Package['unzip']],
+  source => "$downloads/$go_server_package",
+  require => [Wget[$go_server_package], Package['sun-java6-jdk'], Package['unzip']],
+}
+
+package {'go-agent':
+  ensure => installed,
+  provider => dpkg,
+  source => "$downloads/$go_agent_package",
+  require => [Wget[$go_agent_package], Package['sun-java6-jdk']],
+  notify => Service['go-agent'],
 }
 
 service {'go-server':
@@ -66,6 +79,14 @@ service {'go-server':
   hasstatus => true,
   hasrestart => true,
   require => Package['go-server'],
+}
+
+service {'go-agent':
+  enable => true,
+  ensure => running,
+  hasstatus => true,
+  hasrestart => true,
+  require => Package['go-agent'],
 }
 
 file {'go-config':
