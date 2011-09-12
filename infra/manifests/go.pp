@@ -98,3 +98,7 @@ file {'go-config':
   notify => Service['go-server'],
   require => Package['go-server'],
 }
+
+file {'/tmp/vagrant-share/cruise-config.xml':
+  mode => 666,
+}
