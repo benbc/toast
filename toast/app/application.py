@@ -1,7 +1,7 @@
-import pickle
 from model import Library
 from database import Database
 from process import Process
+from commands import serialize, deserialize
 
 class Application(Process):
     def __init__(self):
@@ -22,16 +22,13 @@ class Application(Process):
 
     def _replay(self):
         with open('log/command.log', 'r') as f:
-            try:
-                while True:
-                    command = pickle.load(f)
-                    self._execute(command)
-            except EOFError:
-                pass
+            for line in f:
+                command = deserialize(line)
+                self._execute(command)
 
     def _persist(self, command):
         with open('log/command.log', 'a') as f:
-            pickle.dump(command, f)
+            f.write(serialize(command))
 
     def _execute(self, command):
         print("application executing: %s" % command)
