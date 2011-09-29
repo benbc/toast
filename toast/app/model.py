@@ -29,7 +29,7 @@ class Book:
         self._name = name
         self._author = author
         self._recipes = []
-        self._id = hash("%s/%s" % (name, author))
+        self._id = abs(hash("%s/%s" % (name, author)))
     def write_to(self, target):
         return target(self._id, self._name, self._author)
     def add_author_to(self, authors):
