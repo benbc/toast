@@ -23,12 +23,12 @@ class Application(Process):
     def _replay(self):
         with open('log/command.log', 'r') as f:
             for line in f:
-                command = deserialize(line)
+                command = deserialize(line.strip())
                 self._execute(command)
 
     def _persist(self, command):
         with open('log/command.log', 'a') as f:
-            f.write(serialize(command))
+            f.write(serialize(command)+'\n')
 
     def _execute(self, command):
         print("application executing: %s" % command)
