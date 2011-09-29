@@ -6,7 +6,7 @@ class AddRecipeCommand:
         self._title = title
     def __str__(self):
         return "%s/%s" % (self._book_id, self._title)
-    def execute(self, library, ids, broker):
+    def execute(self, library, broker):
         book = library.find_book(self._book_id)
         book.add_recipe(self._title)
 
@@ -16,5 +16,5 @@ class AddBookCommand:
         self.author = author
     def __str__(self):
         return "%s - %s" % (self.name, self.author)
-    def execute(self, library, ids, broker):
-        library.add(Book(ids, broker, self.name, self.author))
+    def execute(self, library, broker):
+        library.add(Book(broker, self.name, self.author))

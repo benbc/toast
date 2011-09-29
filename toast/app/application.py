@@ -1,5 +1,5 @@
 import pickle
-from model import Library, Ids
+from model import Library
 from database import Database
 from process import Process
 
@@ -8,7 +8,6 @@ class Application(Process):
         Process.__init__(self, 'application')
         self._broker = Broker()
         self._library = Library(self._broker)
-        self._ids = Ids()
 
     def initialize(self):
         self._replay()
@@ -36,7 +35,7 @@ class Application(Process):
 
     def _execute(self, command):
         print("application executing: %s" % command)
-        command.execute(self._library, self._ids, self._broker)
+        command.execute(self._library, self._broker)
 
 class Broker:
     def __init__(self):

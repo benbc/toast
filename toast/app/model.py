@@ -1,5 +1,3 @@
-from utils import Ids
-
 class Library:
     def __init__(self, broker):
         self._broker = broker
@@ -26,12 +24,12 @@ class AuthorList:
             self._broker.send(AuthorAddedEvent(author))
 
 class Book:
-    def __init__(self, ids, broker, name, author):
-        self._id = ids.next()
+    def __init__(self, broker, name, author):
         self._broker = broker
         self._name = name
         self._author = author
         self._recipes = []
+        self._id = hash("%s/%s", (name, author))
     def write_to(self, target):
         return target(self._id, self._name, self._author)
     def add_author_to(self, authors):

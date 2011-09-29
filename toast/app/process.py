@@ -1,6 +1,5 @@
 import multiprocessing
 import zmq
-from utils import Ids
 
 class Process:
     def __init__(self, name):
