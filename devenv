@@ -1,10 +1,14 @@
-puppet apply devenv.pp
+sudo puppet apply devenv.pp
 
-mkdir -p ~/.virtualenvs
 export WORKON_HOME=~/.virtualenvs
+mkdir -p $WORKON_HOME
 . /usr/local/bin/virtualenvwrapper.sh
 
-workon toast || (mkvirtualenv toast && workon toast)
+if [ ! -d $WORKON_HOME/toast ]; then
+   mkvirtualenv --no-site-packages toast
+fi
+
+workon toast
 pip install --requirement=requirements.txt
 
 if [ ! -d log ]; then
