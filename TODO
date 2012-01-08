@@ -9,4 +9,4 @@
 * stores pipes in /var/run
 * pylons -> pyramid
 * use book name as key -- when renamed, keep all old names
-* make devenv sane
+* initialize separate proceses in top-level wrapper
