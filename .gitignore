@@ -3,3 +3,4 @@ log/
 build
 .vagrant
 infra/share/downloads
+webapp/toast.egg-info

@@ -11,6 +11,8 @@ fi
 workon toast
 pip install --requirement=requirements.txt
 
+(cd webapp; python setup.py develop)
+
 if [ ! -d log ]; then
    mkdir log
    touch log/command.log
