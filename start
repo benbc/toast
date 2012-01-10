@@ -1,4 +1,2 @@
-#!/bin/bash
-paster serve development.ini &
-echo "visit http://localhost:5000/view/index"
-
+#!/bin/bash -eu
+(cd webapp; pserve development.ini)

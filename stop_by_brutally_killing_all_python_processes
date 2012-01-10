@@ -1,4 +1,0 @@
-#!/usr/bin/env sh
-set -eu
-
-ps -eaf | grep python | grep toast | awk '{print $2}' | xargs kill
