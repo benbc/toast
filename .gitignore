@@ -1,5 +1,0 @@
-*.pyc
-log/
-.vagrant
-infra/share/downloads
-webapp/toast.egg-info
