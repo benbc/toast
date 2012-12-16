@@ -1,6 +1,6 @@
 (ns toast.handler
   (:use compojure.core
-        [clojure.string :only [split-lines]]
+        [clojure.string :only [split split-lines]]
         [ring.util.response :only [redirect]])
   (:require [compojure.handler :as handler]
             [compojure.route :as route]
@@ -25,6 +25,21 @@
 
 (defn book-titles []
   (.list (io/file book-root)))
+
+(defn path-elems [path] (split path #"/"))
+(defn files-below [root] (rest (file-seq (io/file root))))
+
+(defn all-recipes []
+  (letfn [(extract-info [file] (drop 3 (path-elems (.getPath file))))
+          (recipe? [path] (= 2 (count path)))]
+    (->> (files-below book-root)
+         (map extract-info)
+         (filter recipe?)
+         (map #(array-map :book (first %) :recipe (second %))))))
+
+(defn search-recipes [substring]
+  (letfn [(name-matches [recipe] (.contains (:recipe recipe) substring))]
+    (filter name-matches (all-recipes))))
 
 (defn valid-name [name]
   (re-find #"^[A-Za-z0-9- ]+$" name))
