@@ -23,9 +23,6 @@
       (io/make-parents recipe-file)
       (spit recipe-file ""))))
 
-(defn book-titles []
-  (.list (io/file book-root)))
-
 (defn path-elems [path] (split path #"/"))
 (defn files-below [root] (rest (file-seq (io/file root))))
 
@@ -36,6 +33,9 @@
          (map extract-info)
          (filter recipe?)
          (map #(array-map :book (first %) :recipe (second %))))))
+
+(defn book-titles []
+  (sort (distinct (map :book (all-recipes)))))
 
 (defn search-recipes [substring]
   (letfn [(name-matches [recipe] (.contains (:recipe recipe) substring))]
