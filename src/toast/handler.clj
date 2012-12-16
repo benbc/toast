@@ -26,12 +26,18 @@
 (defn book-titles []
   (.list (io/file book-root)))
 
+(defn valid-name [name]
+  (re-find #"^[A-Za-z0-9- ]+$" name))
+
 (defroutes app-routes
   (GET "/" [] (index (book-titles)))
   (GET "/add" [] (html/emit* add))
   (POST "/add" [title recipes]
-        (add-recipes title (split-lines recipes))
-        (redirect "/"))
+        (let [recipe-list (split-lines recipes)]
+          (if (every? valid-name (conj recipe-list title))
+            (do (add-recipes title (split-lines recipes))
+                (redirect "/"))
+            "Sorry: unaccented letters, numbers, hyphens and spaces only.")))
   (route/not-found "Not Found"))
 
 (def app
