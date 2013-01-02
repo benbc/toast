@@ -13,6 +13,12 @@
   [:li]
   (html/clone-for [book books] (html/content book)))
 
+(html/deftemplate search-results "toast/search-results.html" [recipes]
+  [:li]
+  (html/clone-for [recipe recipes]
+                  [:span.recipe] (html/content (:recipe recipe))
+                  [:span.book] (html/content (:book recipe))))
+
 (def book-root "./var/books")
 (defn book-path [title] [book-root title])
 (defn recipe-path [book recipe] (conj (book-path book) recipe))
@@ -53,6 +59,8 @@
             (do (add-recipes title (split-lines recipes))
                 (redirect "/"))
             "Sorry: unaccented letters, numbers, hyphens and spaces only.")))
+  (GET "/search" [query]
+       (search-results (search-recipes query)))
   (route/not-found "Not Found"))
 
 (def app
