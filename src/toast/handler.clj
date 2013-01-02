@@ -10,7 +10,7 @@
 (def add (html/html-resource "toast/add.html"))
 
 (html/deftemplate index "toast/index.html" [books]
-  [:ul]
+  [:li]
   (html/clone-for [book books] (html/content book)))
 
 (def book-root "./var/books")
