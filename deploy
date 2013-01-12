@@ -1,0 +1,4 @@
+#!/bin/sh -eu
+
+#lein uberjar
+lein run -m toast.deploy

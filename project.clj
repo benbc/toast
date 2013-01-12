@@ -6,4 +6,5 @@
                  [ring/ring-jetty-adapter "1.1.6"]]
   :plugins [[lein-ring "0.7.5"]]
   :ring {:handler toast.handler/app}
+  :profiles {:dev {:dependencies [[com.amazonaws/aws-java-sdk "1.3.27"]]}}
   :main toast.main)
