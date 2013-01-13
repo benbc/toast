@@ -7,13 +7,20 @@
             [clojure.java.io :as io]
             [net.cgrand.enlive-html :as html]))
 
-(def add (html/html-resource "toast/add.html"))
+(html/deftemplate boilerplate "toast/boilerplate.html" [body]
+  [:body]
+  (html/content body))
 
-(html/deftemplate index "toast/index.html" [books]
+(defmacro defpage [name file args & forms]
+  `(defn ~name ~args (boilerplate ((html/snippet ~file [:div.body] [] ~@forms)))))
+
+(defpage index "toast/index.html" [books]
   [:li]
   (html/clone-for [book books] (html/content book)))
 
-(html/deftemplate search-results "toast/search-results.html" [recipes]
+(defpage add "toast/add.html" [])
+
+(defpage search-results "toast/search-results.html" [recipes]
   [:li]
   (html/clone-for [recipe recipes]
                   [:span.recipe] (html/content (:recipe recipe))
@@ -52,7 +59,7 @@
 
 (defroutes app-routes
   (GET "/" [] (index (book-titles)))
-  (GET "/add" [] (html/emit* add))
+  (GET "/add" [] (add))
   (POST "/add" [title recipes]
         (let [recipe-list (split-lines recipes)]
           (if (every? valid-name (conj recipe-list title))
